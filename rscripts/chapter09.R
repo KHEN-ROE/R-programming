@@ -1,5 +1,12 @@
 # Chapter 09
 
+install.packages("multilinguer")
+install.packages(c('stringr', 'hash', 'tau', 'Sejong', 'RSQLite', 'devtools'), type = "binary")
+# Git hub로 설치 한다. 
+install.packages("remotes")
+remotes::install_github('haven-jeon/KoNLP', upgrade = "never", INSTALL_opts=c("--no-multiarch"))
+library(KoNLP)
+library(Sejong)
 # 실습: Oracle 데이터베이스에 연결하기 위한 패키지 설치 
 # 단계 1: 데이터베이스 연결을 위한 패키지 설치 
 install.packages("rJava")
@@ -174,6 +181,7 @@ user_dic <- data.frame(term = c("R 프로그래밍", "페이스북", "김진성"
 buildDictionary(ext_dic = "sejong", user_dic = user_dic)
 
 
+
 # 실습: R 제공 함수로 단어 추출하기  
 paste(extractNoun('김진성은 많은 사람과 소통을 위해서 소셜네트워크에 가입하였습니다.'),
       collapse = " ")
@@ -334,7 +342,7 @@ wordtran
 
 
 
-# 싨브: 단어 간 연관규칙 발견하기 
+# 실습 : 단어 간 연관규칙 발견하기 
 # 단계 1: 연관규칙 발견
 tranrules <- apriori(wordtran, 
                      parameter = list(supp = 0.25, conf = 0.05))
@@ -457,13 +465,13 @@ news_pre <- gsub('\\s+', ' ', news_pre)
 news_pre
 
 # 단계 2: 기사와 관계 없는 'TODAY', '검색어 순위' 등의 내용은 제거 
-news_data <- news_pre[1:59]
+news_data <- news_pre[1:32]
 news_data
 
 
 # 실습: 수집한 자료를 파일로 저장하고 읽기
 setwd("C:/Rwork/output")
-write.csv(news_data, "nes_data.csv", quote = F)
+write.csv(news_data, "news_data.csv", quote = F)
 
 news_data <- read.csv("news_data.csv", header = T, stringsAsFactors = F)
 str(news_data)
@@ -476,10 +484,11 @@ news_text
 
 
 # 실습: 세종 사전에 단어 추가 
-user_dic <- data.frame(term = c("펜데믹", "코로나19", "타다"), tag = 'ncn')
+user_dic <- data.frame(term = c("GPT", "日", "기시다"), tag = 'ncn')
 buildDictionary(ext_dic = 'sejong', user_dic = user_dic)
-
-
+library(koNLP)
+library(Sejong)
+install.packages(sejong)
 # 실습: 단어 추출 사용자 함수 정의하기 
 # 단계 1: 사용자 정의 함수 작성
 exNouns <- function(x) { paste(extractNoun(x), collapse = " ")}
@@ -497,7 +506,7 @@ str(news_nouns)
 # 단계 1: 추출된 단어를 이용한 말뭉치(corpus) 생성
 newsCorpus <- Corpus(VectorSource(news_nouns))
 newsCorpus
-
+library(tm)
 inspect(newsCorpus[1:5]) 
 
 # 단계 2: 단어 vs 문서 집계 행렬 만들기 
@@ -529,8 +538,8 @@ df <- data.frame(word = myNames, freq = wordResult)
 head(df)
 
 # 단계 3: 단어 구름 생성
-pal <- brewer.pas(12, "Paired")
+pal <- brewer.pal(12, "Paired")
 wordcloud(df$word, df$freq, min.freq = 2,
           random.order = F, scale = c(4, 0.7),
-          rot.per = .1, colors = pas, family = "malgun")
+          rot.per = .1, colors = pal, family = "malgun")
 
