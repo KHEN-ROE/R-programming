@@ -74,7 +74,7 @@ CrossTable(x, y, chisq = TRUE)
 
 # 실습: 교육센터에서 교육방법에 따라 교육생들의 만족도에 차이가 있는지 검정
 # 단계 1: 데이터 가져오기 
-data <- read.csv("homogenity.csv")
+data <- read.csv("./data/homogenity.csv")
 head(data)
 
 data <- subset(data, !is.na(survey), c(method, survey))
